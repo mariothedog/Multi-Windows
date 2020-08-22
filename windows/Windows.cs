@@ -22,6 +22,26 @@ namespace MultiWindows.windows
 				SelectedWindow.Window.TeleportSafely(targetPos);
 				SelectedWindow.Window.Position = SelectedWindow.Window.Position.Round();
 			}
+
+			foreach (BaseWindow window in GetChildren())
+			{
+				window.BuildBorder();
+			}
+
+			for (int i = 0; i < GetChildCount(); i++)
+			{
+				for (int j = 0; j < GetChildCount(); j++)
+				{
+					if (i == j)
+					{
+						continue;
+					}
+
+					BaseWindow window = (BaseWindow)GetChild(i);
+					BaseWindow overlappingWindow = (BaseWindow)GetChild(j);
+					window.UpdateBorder(overlappingWindow);
+				}
+			}
 		}
 
 #pragma warning disable IDE0060 // Remove unused parameter
