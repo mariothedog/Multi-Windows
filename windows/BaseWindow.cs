@@ -1,5 +1,4 @@
 using Godot;
-using System.Collections.Generic;
 
 namespace MultiWindows.windows
 {
@@ -83,16 +82,26 @@ namespace MultiWindows.windows
 			{
 				for (int w = 0; w < BorderWidth; w++)
 				{
-					borderTileMap.SetCell((int)topLeft.x + x, (int)topLeft.y - w, (int)Tiles.BorderTileset.Border);
-					borderTileMap.SetCell((int)topLeft.x + x, (int)bottomRight.y + w, (int)Tiles.BorderTileset.Border);
+					int tileID = (int)Tiles.BorderTileset.Border;
+					if (w == 0)
+					{
+						tileID = (int)Tiles.BorderTileset.BorderCollision;
+					}
+					borderTileMap.SetCell((int)topLeft.x + x, (int)topLeft.y - w, tileID);
+					borderTileMap.SetCell((int)topLeft.x + x, (int)bottomRight.y + w, tileID);
 				}
 			}
 			for (int y = 0; y < bottomRight.y - topLeft.y; y++)
 			{
 				for (int w = 0; w < BorderWidth; w++)
 				{
-					borderTileMap.SetCell((int)topLeft.x - w, (int)topLeft.y + y, (int)Tiles.BorderTileset.Border);
-					borderTileMap.SetCell((int)bottomRight.x + w, (int)topLeft.y + y, (int)Tiles.BorderTileset.Border);
+					int tileID = (int)Tiles.BorderTileset.Border;
+					if (w == 0)
+					{
+						tileID = (int)Tiles.BorderTileset.BorderCollision;
+					}
+					borderTileMap.SetCell((int)topLeft.x - w, (int)topLeft.y + y, tileID);
+					borderTileMap.SetCell((int)bottomRight.x + w, (int)topLeft.y + y, tileID);
 				}
 			}
 		}
@@ -146,12 +155,10 @@ namespace MultiWindows.windows
 			}
 		}
 
-		Rect2 overlappingWindowRect = new Rect2();
 		public void UpdateBorder(BaseWindow overlappingWindow)
 		{
 			Vector2 overlappingWindowSize = new Vector2(overlappingWindow.Width, overlappingWindow.Height) * overlappingWindow.tileMap.CellSize;
-			overlappingWindowRect = new Rect2(overlappingWindow.Position, overlappingWindowSize);
-			Update();
+			Rect2 overlappingWindowRect = new Rect2(overlappingWindow.Position, overlappingWindowSize);
 
 			foreach (Vector2 tilePos in borderTileMap.GetUsedCells())
 			{
@@ -163,59 +170,5 @@ namespace MultiWindows.windows
 				}
 			}
 		}
-
-		//public override void _Draw()
-		//{
-		//	Rect2 rect = overlappingWindowRect;
-		//	rect.Position -= Position;
-		//	DrawRect(rect, new Color(1, 0, 0), true);
-		//}
-
-		//Rect2 overlappingWindowRect = new Rect2();
-		//List<Rect2> rrr = new List<Rect2>();
-		//public void UpdateBorder(BaseWindow overlappingWindow)
-		//{
-		//	Vector2 overlappingWindowSize = new Vector2(overlappingWindow.Width, overlappingWindow.Height) * overlappingWindow.tileMap.CellSize;
-		//	Rect2 overlappingWindowRect = new Rect2(overlappingWindow.Position + new Vector2(1, 1) * overlappingWindow.tileMap.CellSize,
-		//		overlappingWindowSize - new Vector2(2, 2) * overlappingWindow.tileMap.CellSize);
-		//	//rrr = new List<Rect2>();
-		//	foreach (Vector2 tilePos in borderTileMap.GetUsedCells())
-		//	{
-		//		Vector2 pos = Position + tilePos * tileMap.CellSize;
-		//		Rect2 tileRect = new Rect2(pos + new Vector2(1, 1), tileMap.CellSize - new Vector2(2, 2));
-
-		//		if (overlappingWindowRect.Encloses(tileRect))
-		//		{
-		//			//rrr.Add(tileRect);
-		//			int tileID = (int)Tiles.Tileset.Empty;
-		//			//if (!overlappingWindowRect.Encloses(tileRect)) 
-		//			//{
-		//			//	tileID = (int)Tiles.Tileset.Connecting;
-		//			//}
-		//			tileMap.SetCellv(tilePos, tileID);
-		//		}
-		//	}
-		//	Update();
-		//}
-
-		//public override void _Draw()
-		//{
-		//	//Rect2 e = overlappingWindowRect;
-		//	//e.Position -= Position;
-		//	//DrawRect(e, Color.Color8(255, 0, 0), true, 1);
-
-		//	//foreach (Rect2 p in rrr)
-		//	//{
-		//	//	Rect2 z = p;
-		//	//	z.Position -= Position;
-		//	//	DrawRect(z, Color.Color8(0, 255, 0), false, 1);
-		//	//}
-		//}
-
-		//public bool EnclosesInAtLeastOneDimension(Rect2 rect, Rect2 rect2)
-		//{
-		//	return ((rect2.Position.x >= rect.Position.x) && ((rect2.Position.x + rect2.Size.x) <= (rect.Position.x + rect.Size.x))) ||
-		//		((rect2.Position.y >= rect.Position.y) && ((rect2.Position.y + rect2.Size.y) <= (rect.Position.y + rect.Size.y)));
-		//}
 	}
 }

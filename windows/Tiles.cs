@@ -13,7 +13,8 @@ namespace MultiWindows.windows
 		public enum BorderTileset
 		{
 			Empty = -1,
-			Border
+			Border,
+			BorderCollision
 		}
 	}
 }
