@@ -160,7 +160,10 @@ namespace MultiWindows.windows
 			Vector2 overlappingWindowSize = new Vector2(overlappingWindow.Width, overlappingWindow.Height) * overlappingWindow.tileMap.CellSize;
 			Rect2 overlappingWindowRect = new Rect2(overlappingWindow.Position, overlappingWindowSize);
 
-			foreach (Vector2 tilePos in borderTileMap.GetUsedCells())
+			// Only iterates through the border tiles that have collision shapes
+			// The border tiles that do not have any collision shapes have a z-index of -1 which means
+			// that they will appear behind the window itself and so do not have to be removed
+			foreach (Vector2 tilePos in borderTileMap.GetUsedCellsById((int)Tiles.BorderTileset.BorderCollision))
 			{
 				Vector2 pos = Position + tilePos;
 				
