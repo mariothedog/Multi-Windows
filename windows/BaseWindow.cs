@@ -109,34 +109,24 @@ namespace MultiWindows.windows
 
 			Vector2 size = new Vector2(Width, Height) * tileMap.CellSize;
 			Vector2 halfSize = size / 2;
-			rectangleShape.Extents = halfSize - new Vector2(1, 1) * tileMap.CellSize;
+			rectangleShape.Extents = halfSize - new Vector2(1, 1) * tileMap.CellSize - new Vector2(0.1f, 0.1f);
 			collisionShape.Position = halfSize;
-
-			//GD.Print("A ", Width, " ", Height);
-			//foreach (Node a in GetChildren())
-			//{
-			//	GD.Print(a.Name);
-			//}
-			//GD.Print("-=-=-=-");
 
 			if (HasNode("CollisionShape2D"))
 			{
 				CollisionShape2D oldCollisionShape = (CollisionShape2D)GetNode("CollisionShape2D");
 				collisionShape.Name = "CollisionShape2D";
 				oldCollisionShape.ReplaceBy(collisionShape);
-				//GD.Print("W ", collisionShape, " ", collisionShape.Name, " ", oldCollisionShape, " ", oldCollisionShape.Name);
 				return;
 			}
 
 			AddChild(collisionShape, true);
-			//GD.Print(collisionShape);
-			//GD.Print(collisionShape.Name);
 			collisionShape.Owner = GetTree().EditedSceneRoot;
 		}
 
 		public void TeleportSafely(Vector2 pos)
 		{
-			for (int i = 0; i < 200; i++)
+			for (int i = 0; i < 50; i++)
 			{
 				float targetDist = Position.DistanceTo(pos);
 				if (targetDist < 1)
@@ -145,7 +135,7 @@ namespace MultiWindows.windows
 					return;
 				}
 				Vector2 targetDir = Position.DirectionTo(pos);
-				Vector2 velocity = targetDir * 50;
+				Vector2 velocity = targetDir * 200;
 				MoveAndSlide(velocity);
 			}
 		}
@@ -154,8 +144,6 @@ namespace MultiWindows.windows
 		{
 			Vector2 overlappingWindowSize = new Vector2(overlappingWindow.Width - 2, overlappingWindow.Height - 2) * overlappingWindow.tileMap.CellSize;
 			Rect2 overlappingWindowRect = new Rect2(overlappingWindow.Position + tileMap.CellSize, overlappingWindowSize);
-
-			Update();
 
 			// Only iterates through the tiles of the TileMap that contains the collision shapes for the border
 			// The border tiles that do not have any collision shapes (in the main TileMap) have a z-index of -1 which means
