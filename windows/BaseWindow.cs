@@ -30,7 +30,7 @@ namespace MultiWindows.windows
 		}
 
 		private int _borderWidth = 8;
-		[Export(PropertyHint.Range, "0,10,1,or_greater")]
+		[Export(PropertyHint.Range, "0,50")]
 		public int BorderWidth
 		{
 			get => _borderWidth;
@@ -155,7 +155,7 @@ namespace MultiWindows.windows
 			}
 		}
 
-		public void UpdateBorder(BaseWindow overlappingWindow)
+		public void RemoveOverlappingBorder(BaseWindow overlappingWindow)
 		{
 			Vector2 overlappingWindowSize = new Vector2(overlappingWindow.Width, overlappingWindow.Height) * overlappingWindow.tileMap.CellSize;
 			Rect2 overlappingWindowRect = new Rect2(overlappingWindow.Position, overlappingWindowSize);
