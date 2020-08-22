@@ -34,7 +34,7 @@ namespace MultiWindows.windows
 			TileMap tileMap = (TileMap)GetNode("TileMap");
 			ClearTileMap(tileMap);
 			BuildTileMap(tileMap);
-			BuildCollisionShape();
+			BuildCollisionShape(tileMap.CellSize);
 		}
 
 		private void ClearTileMap(TileMap tileMap)
@@ -74,9 +74,25 @@ namespace MultiWindows.windows
 				}
 		}
 
-		private void BuildCollisionShape()
+		private void BuildCollisionShape(Vector2 sizeCoefficient)
 		{
+			CollisionShape2D collisionShape = new CollisionShape2D();
+			RectangleShape2D rectangleShape = new RectangleShape2D();
+			collisionShape.Shape = rectangleShape;
 
+			Vector2 size = new Vector2(Width, Height) * sizeCoefficient;
+			rectangleShape.Extents = size / 2;
+			collisionShape.Position = size / 2;
+
+			if (HasNode("CollisionShape2D"))
+			{
+				CollisionShape2D oldCollisionShape = (CollisionShape2D)GetNode("CollisionShape2D");
+				oldCollisionShape.ReplaceBy(collisionShape);
+				return;
+			}
+
+			AddChild(collisionShape);
+			collisionShape.Owner = GetTree().EditedSceneRoot;
 		}
 	}
 }

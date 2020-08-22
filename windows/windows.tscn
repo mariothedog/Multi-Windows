@@ -7,6 +7,8 @@
 script = ExtResource( 2 )
 
 [node name="BaseWindow" parent="." instance=ExtResource( 1 )]
+Height = 20
 
 [node name="BaseWindow2" parent="." instance=ExtResource( 1 )]
 position = Vector2( 254, 130 )
+Width = 5
