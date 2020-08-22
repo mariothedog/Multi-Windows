@@ -81,8 +81,9 @@ namespace MultiWindows.windows
 			collisionShape.Shape = rectangleShape;
 
 			Vector2 size = new Vector2(Width, Height) * sizeCoefficient;
-			rectangleShape.Extents = size / 2;
-			collisionShape.Position = size / 2;
+			Vector2 halfSize = size / 2;
+			rectangleShape.Extents = halfSize - new Vector2(1, 1) * sizeCoefficient;
+			collisionShape.Position = halfSize;
 
 			if (HasNode("CollisionShape2D"))
 			{
@@ -93,6 +94,22 @@ namespace MultiWindows.windows
 
 			AddChild(collisionShape);
 			collisionShape.Owner = GetTree().EditedSceneRoot;
+		}
+
+		public void TeleportSafely(Vector2 pos)
+		{
+			for (int i = 0; i < 200; i++)
+			{
+				float targetDist = Position.DistanceTo(pos);
+				if (targetDist < 1)
+				{
+					Position = Position;
+					return;
+				}
+				Vector2 targetDir = Position.DirectionTo(pos);
+				Vector2 velocity = targetDir * 50;
+				MoveAndSlide(velocity);
+			}
 		}
 	}
 }

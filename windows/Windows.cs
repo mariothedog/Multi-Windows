@@ -18,7 +18,9 @@ namespace MultiWindows.windows
 		{
 			if (SelectedWindow is SelectedWindow)
 			{
-				SelectedWindow.Window.Position = GetLocalMousePosition() - SelectedWindow.HeldOffsetFromCenter;
+				Vector2 targetPos = GetLocalMousePosition() - SelectedWindow.HeldOffsetFromCenter;
+				SelectedWindow.Window.TeleportSafely(targetPos);
+				SelectedWindow.Window.Position = SelectedWindow.Window.Position.Round();
 			}
 		}
 
