@@ -7,14 +7,13 @@ namespace MultiWindows.windows
 			Empty = -1,
 			Sky,
 			Grass,
-			Connecting
+			Border
 		}
 
-		public enum BorderTileset
+		public enum CollisionBorderTileset
 		{
 			Empty = -1,
-			Border,
-			BorderCollision
+			Border
 		}
 	}
 }

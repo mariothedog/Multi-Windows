@@ -39,7 +39,7 @@ namespace MultiWindows.windows
 
 					BaseWindow window = (BaseWindow)GetChild(i);
 					BaseWindow overlappingWindow = (BaseWindow)GetChild(j);
-					window.RemoveOverlappingBorder(overlappingWindow);
+					window.RemoveOverlappingBorderCollisions(overlappingWindow);
 				}
 			}
 		}

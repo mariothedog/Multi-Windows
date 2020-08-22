@@ -1,4 +1,7 @@
 using Godot;
+using Godot.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MultiWindows.windows
 {
@@ -6,7 +9,7 @@ namespace MultiWindows.windows
 	public class BaseWindow : KinematicBody2D
 	{
 		private int _width = 10;
-		[Export(PropertyHint.Range, "1,200,1,or_greater")]
+		[Export(PropertyHint.Range, "3,200,1,or_greater")]
 		public int Width
 		{
 			get => _width;
@@ -18,7 +21,7 @@ namespace MultiWindows.windows
 		}
 
 		private int _height = 10;
-		[Export(PropertyHint.Range, "1,10,1,or_greater")]
+		[Export(PropertyHint.Range, "3,200,1,or_greater")]
 		public int Height
 		{
 			get => _height;
@@ -29,113 +32,105 @@ namespace MultiWindows.windows
 			}
 		}
 
-		private int _borderWidth = 8;
-		[Export(PropertyHint.Range, "0,50")]
-		public int BorderWidth
-		{
-			get => _borderWidth;
-			set
-			{
-				_borderWidth = value;
-				BuildWindow(true);
-			}
-		}
-
 		public TileMap tileMap;
-		public TileMap borderTileMap;
+		public TileMap collisionBorderTileMap;
 
 		public override void _Ready()
 		{
 			tileMap = (TileMap)GetNode("TileMap");
-			borderTileMap = (TileMap)GetNode("Border");
+			collisionBorderTileMap = (TileMap)GetNode("CollisionBorder");
 		}
 
-		public void BuildWindow(bool justBorder = false)
+		public void BuildWindow()
 		{
-			if (!justBorder)
-			{
-				tileMap = (TileMap)GetNode("TileMap");
-				ClearTileMap(tileMap);
-				BuildBackground();
-				BuildCollisionShape(tileMap.CellSize);
-			}
-			
-			borderTileMap = (TileMap)GetNode("Border");
-			ClearTileMap(borderTileMap);
+			tileMap = (TileMap)GetNode("TileMap");
+			collisionBorderTileMap = (TileMap)GetNode("CollisionBorder");
+
+			tileMap.Clear();
+			collisionBorderTileMap.Clear();
+
+			BuildTileMap();
+
+			BuildCollisionShape();
+		}
+
+		public void BuildTileMap()
+		{
 			BuildBorder();
-		}
-
-		public void ClearTileMap(TileMap tileMap)
-		{
-			foreach (Vector2 tilePos in tileMap.GetUsedCells())
-			{
-				tileMap.SetCellv(tilePos, (int)Tiles.Tileset.Empty);
-			}
+			BuildBackground();
 		}
 
 		public void BuildBorder()
 		{
-			Vector2 topLeft = new Vector2(-1, -1);
+			Vector2 topLeft = Vector2.Zero;
 			Vector2 bottomRight = new Vector2(Width, Height) * tileMap.CellSize;
 
-			for (int x = -BorderWidth + 1; x <= bottomRight.x - topLeft.x + BorderWidth - 1; x++)
+			// Place visible border tiles
+			for (int x = 0; x < Width; x++)
 			{
-				for (int w = 0; w < BorderWidth; w++)
-				{
-					int tileID = (int)Tiles.BorderTileset.Border;
-					if (w == 0)
-					{
-						tileID = (int)Tiles.BorderTileset.BorderCollision;
-					}
-					borderTileMap.SetCell((int)topLeft.x + x, (int)topLeft.y - w, tileID);
-					borderTileMap.SetCell((int)topLeft.x + x, (int)bottomRight.y + w, tileID);
-				}
+				tileMap.SetCell(x, 0, (int)Tiles.Tileset.Border);
+				tileMap.SetCell(x, Height - 1, (int)Tiles.Tileset.Border);
 			}
-			for (int y = 0; y < bottomRight.y - topLeft.y; y++)
+			for (int y = 0; y < Height; y++)
 			{
-				for (int w = 0; w < BorderWidth; w++)
-				{
-					int tileID = (int)Tiles.BorderTileset.Border;
-					if (w == 0)
-					{
-						tileID = (int)Tiles.BorderTileset.BorderCollision;
-					}
-					borderTileMap.SetCell((int)topLeft.x - w, (int)topLeft.y + y, tileID);
-					borderTileMap.SetCell((int)bottomRight.x + w, (int)topLeft.y + y, tileID);
-				}
+				tileMap.SetCell(0, y, (int)Tiles.Tileset.Border);
+				tileMap.SetCell(Width - 1, y, (int)Tiles.Tileset.Border);
+			}
+			
+			// Place collision border tiles
+			for (int x = (int)tileMap.CellSize.x - 1; x < bottomRight.x - topLeft.x - (tileMap.CellSize.x - 1); x++)
+			{
+				collisionBorderTileMap.SetCell(x, (int)tileMap.CellSize.y - 1, (int)Tiles.CollisionBorderTileset.Border);
+				collisionBorderTileMap.SetCell(x, (int)bottomRight.y - (int)tileMap.CellSize.y, (int)Tiles.CollisionBorderTileset.Border);
+			}
+			for (int y = 7; y < bottomRight.y - topLeft.y - 7; y++)
+			{
+				collisionBorderTileMap.SetCell(7, y, (int)Tiles.CollisionBorderTileset.Border);
+				collisionBorderTileMap.SetCell((int)bottomRight.x - (int)tileMap.CellSize.y, y, (int)Tiles.CollisionBorderTileset.Border);
 			}
 		}
 
 		public void BuildBackground()
 		{
-			for (int x = 0; x < Width; x++)
+			for (int x = 1; x < Width - 1; x++)
 			{
-				for (int y = 0; y < Height; y++)
+				for (int y = 1; y < Height - 1; y++)
 				{
 					tileMap.SetCell(x, y, (int)Tiles.Tileset.Sky);
 				}
 			}
 		}
 
-		public void BuildCollisionShape(Vector2 sizeCoefficient)
+		public void BuildCollisionShape()
 		{
 			CollisionShape2D collisionShape = new CollisionShape2D();
 			RectangleShape2D rectangleShape = new RectangleShape2D();
 			collisionShape.Shape = rectangleShape;
 
-			Vector2 size = new Vector2(Width, Height) * sizeCoefficient;
+			Vector2 size = new Vector2(Width, Height) * tileMap.CellSize;
 			Vector2 halfSize = size / 2;
-			rectangleShape.Extents = halfSize;
+			rectangleShape.Extents = halfSize - new Vector2(1, 1) * tileMap.CellSize;
 			collisionShape.Position = halfSize;
+
+			//GD.Print("A ", Width, " ", Height);
+			//foreach (Node a in GetChildren())
+			//{
+			//	GD.Print(a.Name);
+			//}
+			//GD.Print("-=-=-=-");
 
 			if (HasNode("CollisionShape2D"))
 			{
 				CollisionShape2D oldCollisionShape = (CollisionShape2D)GetNode("CollisionShape2D");
+				collisionShape.Name = "CollisionShape2D";
 				oldCollisionShape.ReplaceBy(collisionShape);
+				//GD.Print("W ", collisionShape, " ", collisionShape.Name, " ", oldCollisionShape, " ", oldCollisionShape.Name);
 				return;
 			}
 
-			AddChild(collisionShape);
+			AddChild(collisionShape, true);
+			//GD.Print(collisionShape);
+			//GD.Print(collisionShape.Name);
 			collisionShape.Owner = GetTree().EditedSceneRoot;
 		}
 
@@ -155,21 +150,23 @@ namespace MultiWindows.windows
 			}
 		}
 
-		public void RemoveOverlappingBorder(BaseWindow overlappingWindow)
+		public void RemoveOverlappingBorderCollisions(BaseWindow overlappingWindow)
 		{
-			Vector2 overlappingWindowSize = new Vector2(overlappingWindow.Width, overlappingWindow.Height) * overlappingWindow.tileMap.CellSize;
-			Rect2 overlappingWindowRect = new Rect2(overlappingWindow.Position, overlappingWindowSize);
+			Vector2 overlappingWindowSize = new Vector2(overlappingWindow.Width - 2, overlappingWindow.Height - 2) * overlappingWindow.tileMap.CellSize;
+			Rect2 overlappingWindowRect = new Rect2(overlappingWindow.Position + tileMap.CellSize, overlappingWindowSize);
 
-			// Only iterates through the border tiles that have collision shapes
-			// The border tiles that do not have any collision shapes have a z-index of -1 which means
+			Update();
+
+			// Only iterates through the tiles of the TileMap that contains the collision shapes for the border
+			// The border tiles that do not have any collision shapes (in the main TileMap) have a z-index of -1 which means
 			// that they will appear behind the window itself and so do not have to be removed
-			foreach (Vector2 tilePos in borderTileMap.GetUsedCellsById((int)Tiles.BorderTileset.BorderCollision))
+			foreach (Vector2 tilePos in collisionBorderTileMap.GetUsedCells())
 			{
 				Vector2 pos = Position + tilePos;
-				
+
 				if (overlappingWindowRect.HasPoint(pos))
 				{
-					borderTileMap.SetCellv(tilePos, (int)Tiles.BorderTileset.Empty);
+					collisionBorderTileMap.SetCellv(tilePos, (int)Tiles.CollisionBorderTileset.Empty);
 				}
 			}
 		}
