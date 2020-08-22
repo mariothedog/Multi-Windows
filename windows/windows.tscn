@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://windows/base_window.tscn" type="PackedScene" id=1]
+[ext_resource path="res://windows/Windows.cs" type="Script" id=2]
+
+[node name="Windows" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="BaseWindow" parent="." instance=ExtResource( 1 )]
+Height = 20
+
+[node name="BaseWindow2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 171, 121 )
+Width = 30
+Height = 7
+
+[node name="BaseWindow3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 472, -78 )
+Width = 3
+Height = 30
+
+[node name="BaseWindow4" parent="." instance=ExtResource( 1 )]
+position = Vector2( 71, 207 )
+Width = 26
+Height = 18
+
+[node name="BaseWindow5" parent="." instance=ExtResource( 1 )]
+position = Vector2( 372, 207 )
+Width = 55
+Height = 8

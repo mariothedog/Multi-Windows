@@ -5,9 +5,15 @@ namespace MultiWindows.windows
 		public enum Tileset
 		{
 			Empty = -1,
-			Border,
 			Sky,
-			Grass
+			Grass,
+			Border
+		}
+
+		public enum CollisionBorderTileset
+		{
+			Empty = -1,
+			Border
 		}
 	}
 }
