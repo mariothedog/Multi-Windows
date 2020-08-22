@@ -22,7 +22,9 @@ namespace MultiWindows.windows
 			}
 		}
 
+#pragma warning disable IDE0060 // Remove unused parameter
 		private void OnWindowInputEvent(object viewport, object @event, int shape_idx, BaseWindow window)
+#pragma warning restore IDE0060 // Remove unused parameter
 		{
 			if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == (int)ButtonList.Left && eventMouseButton.Pressed && SelectedWindow?.Window != window)
 			{
