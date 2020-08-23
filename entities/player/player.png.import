@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/border_collision.png-aebccb47af291d9fdced35549c51d23a.stex"
+path="res://.import/player.png-5e2e7e7552b041428056885c13411183.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://windows/tiles/border_collision.png"
-dest_files=[ "res://.import/border_collision.png-aebccb47af291d9fdced35549c51d23a.stex" ]
+source_file="res://entities/player/player.png"
+dest_files=[ "res://.import/player.png-5e2e7e7552b041428056885c13411183.stex" ]
 
 [params]
 

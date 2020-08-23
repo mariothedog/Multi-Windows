@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://entities/player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://windows/base_window.tscn" type="PackedScene" id=2]
+[ext_resource path="res://windows/windows.tscn" type="PackedScene" id=3]
+[ext_resource path="res://windows/tilesets/tileset.tres" type="TileSet" id=5]
+
+[node name="BaseLevel" type="Node"]
+
+[node name="Windows" parent="." instance=ExtResource( 3 )]
+
+[node name="BaseWindow" parent="Windows" instance=ExtResource( 2 )]
+position = Vector2( -384, 0 )
+Height = 30
+Width = 50
+
+[node name="BaseWindow2" parent="Windows" instance=ExtResource( 2 )]
+position = Vector2( 103, 0 )
+Height = 15
+Width = 30
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( -169, 123 )
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 5 )
+cell_size = Vector2( 8, 8 )
+collision_layer = 2
+collision_mask = 0
+format = 1
+tile_data = PoolIntArray( 1310697, 1, 0, 1310698, 1, 0, 1310699, 1, 0 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( -169, 134 )
+current = true
+zoom = Vector2( 0.1, 0.1 )
+
+[editable path="Windows"]
