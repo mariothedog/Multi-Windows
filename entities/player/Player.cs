@@ -7,7 +7,7 @@ namespace MultiWindows.entities.player
 	{
 		public Player()
 		{
-			Speed = 100;
+			Speed = 200;
 			GravitySpeed = 200;
 		}
 
@@ -21,10 +21,6 @@ namespace MultiWindows.entities.player
 			GetInput();
 			base._PhysicsProcess(delta);
 			Animate();
-
-			//Position = new Vector2(Position.x, Mathf.Floor(Position.y));
-
-			//Position = Position.Floor();
 		}
 
 		protected void Animate()

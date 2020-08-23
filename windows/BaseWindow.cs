@@ -83,9 +83,9 @@ namespace MultiWindows.windows
 				collisionBorderTileMap.SetCell(x, (int)tileMap.CellSize.y - 1, (int)Tiles.CollisionBorderTileset.Border);
 				collisionBorderTileMap.SetCell(x, (int)bottomRight.y - (int)tileMap.CellSize.y, (int)Tiles.CollisionBorderTileset.Border);
 			}
-			for (int y = 7; y < bottomRight.y - topLeft.y - 7; y++)
+			for (int y = (int)tileMap.CellSize.y - 1; y < bottomRight.y - topLeft.y - (tileMap.CellSize.y - 1); y++)
 			{
-				collisionBorderTileMap.SetCell(7, y, (int)Tiles.CollisionBorderTileset.Border);
+				collisionBorderTileMap.SetCell((int)tileMap.CellSize.x - 1, y, (int)Tiles.CollisionBorderTileset.Border);
 				collisionBorderTileMap.SetCell((int)bottomRight.x - (int)tileMap.CellSize.y, y, (int)Tiles.CollisionBorderTileset.Border);
 			}
 		}
